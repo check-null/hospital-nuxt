@@ -21,16 +21,21 @@ service.interceptors.request.use(
 // http response 拦截器 
 service.interceptors.response.use(
     response => {
-
-        if (response.data.code !== 200) {
-            Message({
-                message: response.data.message,
-                type: 'error', 
-                duration: 5 * 1000
-            })
-            return Promise.reject(response.data)
+        if (response.data.code === 208) {
+            // 弹出登录框
+            loginEvent.$emit('loginDialogEvent')
+            return
         } else {
-            return response.data
+            if (response.data.code !== 200) {
+                Message({
+                    message: response.data.message,
+                    type: 'error',
+                    duration: 5 * 1000
+                })
+                return Promise.reject(response.data)
+            } else {
+                return response.data
+            }
         }
     },
     error => {

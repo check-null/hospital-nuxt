@@ -103,7 +103,7 @@
             </div>
             <div class="bottom">
               <div class="wechat-wrapper" @click="weixinLogin()">
-                <span class="iconfont icon"></span>
+                <span class="iconfont icon" style="background: none; color: white"></span>
               </div>
               <span class="third-text"> 第三方账号登录 </span>
             </div>
@@ -120,7 +120,7 @@
             <div class="bottom wechat" style="margin-top: -80px">
               <div class="phone-container">
                 <div class="phone-wrapper" @click="phoneLogin()">
-                  <span class="iconfont icon"></span>
+                  <span class="iconfont icon" style="background: none; color: white"></span>
                 </div>
                 <span class="third-text"> 手机短信验证码登录 </span>
               </div>
@@ -167,6 +167,7 @@ import Vue from "vue";
 import userInfoApi from "@/api/userInfo";
 import smsApi from "@/api/msm";
 import hospitalApi from "@/api/hosp";
+import wxApi from "@/api/weixin";
 
 const defaultDialogAtrr = {
   showLoginType: "phone", // 控制手机登录与微信登录切换
@@ -207,6 +208,17 @@ export default {
     loginEvent.$on("loginDialogEvent", () => {
       document.getElementById("loginDialog").click();
     });
+
+    // 初始化微信
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js";
+
+    document.body.appendChild(script);
+    let self = this;
+    window["loginCallBack"] = (name, token, openid) => {
+      self.loginCallBack(name, token, openid);
+    };
   },
   methods: {
     // 绑定登录或获取验证码按钮
@@ -348,6 +360,21 @@ export default {
 
     weixinLogin() {
       this.dialogAtrr.showLoginType = "weixin";
+
+      wxApi.getLoginParam().then(({ data }) => {
+        console.log(data);
+        console.log(data.redirectUrl);
+        var obj = new WxLogin({
+          self_redirect: true,
+          id: "weixinLogin", // 容器的id
+          appid: data.appid, // 公众号appid
+          scope: data.scope, // 默认网页即可
+          redirect_url: data.redirectUrl, // 回调地址
+          state: data.state, // 校验
+          style: "black", // 可选黑白两种样式
+          href: "", // 外部css文件的url,需要https
+        });
+      });
     },
 
     phoneLogin() {
@@ -364,6 +391,14 @@ export default {
         });
         cb(data);
       });
+    },
+    loginCallBack(name, token, openid) {
+      if (openid && openid != "") {
+        this.userInfo.openid = openid;
+        this.showLogin();
+      } else {
+        this.setCookies(name, token);
+      }
     },
   },
 };
