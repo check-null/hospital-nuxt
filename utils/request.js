@@ -4,7 +4,7 @@ import cookie from 'js-cookie'
 // 创建axios实例 
 const service = axios.create({
     // 请求超时时间 
-    baseURL: 'http://hosp.com',
+    baseURL: 'http://hosp.com:8000',
     timeout: 15000
 })
 // http request 拦截器 
