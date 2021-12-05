@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
-const api_name = '/api/ucenter/wx'
+const api_name = '/oauth'
 
 export default {
     getLoginParam() {
         return request({
-            url: `${api_name}/getLoginParam`,
+            url: `${api_name}/render/qq`,
             method: 'get'
         })
     }

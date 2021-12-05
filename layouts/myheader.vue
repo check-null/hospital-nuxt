@@ -60,6 +60,7 @@
 
     <!-- 登录弹出层 -->
     <el-dialog
+      v-if="dialogUserFormVisible"
       :visible.sync="dialogUserFormVisible"
       style="text-align: left"
       top="50px"
@@ -102,8 +103,12 @@
               </div>
             </div>
             <div class="bottom">
-              <div class="wechat-wrapper" @click="weixinLogin()">
-                <span class="iconfont icon" style="background: none; color: white"></span>
+              <div class="wechat-wrapper" @click="qqLogin()">
+                <span
+                  class="iconfont icon"
+                  style="background: none; color: white"
+                  ></span
+                >
               </div>
               <span class="third-text"> 第三方账号登录 </span>
             </div>
@@ -120,7 +125,11 @@
             <div class="bottom wechat" style="margin-top: -80px">
               <div class="phone-container">
                 <div class="phone-wrapper" @click="phoneLogin()">
-                  <span class="iconfont icon" style="background: none; color: white"></span>
+                  <span
+                    class="iconfont icon"
+                    style="background: none; color: white"
+                    ></span
+                  >
                 </div>
                 <span class="third-text"> 手机短信验证码登录 </span>
               </div>
@@ -167,7 +176,7 @@ import Vue from "vue";
 import userInfoApi from "@/api/userInfo";
 import smsApi from "@/api/msm";
 import hospitalApi from "@/api/hosp";
-import wxApi from "@/api/weixin";
+import qqApi from "@/api/qq";
 
 const defaultDialogAtrr = {
   showLoginType: "phone", // 控制手机登录与微信登录切换
@@ -190,7 +199,7 @@ export default {
       userInfo: {
         phone: "",
         code: "",
-        openid: "",
+        unionId: "",
       },
       state: "",
       dialogUserFormVisible: false,
@@ -209,16 +218,12 @@ export default {
       document.getElementById("loginDialog").click();
     });
 
-    // 初始化微信
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js";
-
-    document.body.appendChild(script);
-    let self = this;
-    window["loginCallBack"] = (name, token, openid) => {
-      self.loginCallBack(name, token, openid);
-    };
+    if (this.$route.params.isCall) {
+      let call = this.$route.params.call;
+      this.loginCallback(call.name, call.token, call.unionId);
+      this.$route.params.isCall = false;
+      this.$route.params.call = null;
+    }
   },
   methods: {
     // 绑定登录或获取验证码按钮
@@ -263,7 +268,6 @@ export default {
       userInfoApi
         .login(this.userInfo)
         .then((response) => {
-          console.log(response.data);
           // 登录成功 设置cookie
           this.setCookies(response.data.name, response.data.token);
         })
@@ -338,7 +342,6 @@ export default {
       let token = cookie.get("token");
       if (token) {
         this.name = cookie.get("name");
-        console.log(this.name);
       }
     },
 
@@ -358,22 +361,11 @@ export default {
       window.location.href = "/hosp/" + item.hoscode;
     },
 
-    weixinLogin() {
+    qqLogin() {
       this.dialogAtrr.showLoginType = "weixin";
-
-      wxApi.getLoginParam().then(({ data }) => {
-        console.log(data);
-        console.log(data.redirectUrl);
-        var obj = new WxLogin({
-          self_redirect: true,
-          id: "weixinLogin", // 容器的id
-          appid: data.appid, // 公众号appid
-          scope: data.scope, // 默认网页即可
-          redirect_url: data.redirectUrl, // 回调地址
-          state: data.state, // 校验
-          style: "black", // 可选黑白两种样式
-          href: "", // 外部css文件的url,需要https
-        });
+      qqApi.getLoginParam().then(({ data }) => {
+        // window.open(data, "_blank");
+        window.location.href = data;
       });
     },
 
@@ -392,9 +384,9 @@ export default {
         cb(data);
       });
     },
-    loginCallBack(name, token, openid) {
-      if (openid && openid != "") {
-        this.userInfo.openid = openid;
+    loginCallback(name, token, unionId) {
+      if (unionId && unionId != "") {
+        this.userInfo.unionId = unionId;
         this.showLogin();
       } else {
         this.setCookies(name, token);
