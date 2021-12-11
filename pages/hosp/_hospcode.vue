@@ -146,6 +146,8 @@ import "~/assets/css/hospital_personal.css";
 import "~/assets/css/hospital.css";
 import cookie from "js-cookie";
 import hospApi from "@/api/hosp";
+import userInfoApi from "@/api/userInfo";
+
 export default {
   data() {
     //这里存放数据
@@ -185,6 +187,15 @@ export default {
         loginEvent.$emit("loginDialogEvent");
         return;
       }
+
+      userInfoApi.getUserInfo().then(({ data }) => {
+        let status = data.authStatus;
+        if (!status || status !== 2) {
+          window.location.href = "/user";
+          return;
+        }
+      });
+
       window.location.href = `/hosp/schedule?hoscode=${this.hoscode}&depcode=${depcode}`;
     },
     show() {

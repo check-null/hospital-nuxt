@@ -10,17 +10,17 @@ export default {
             data: userInfo
         })
     },
-
+    // 获得用户信息
     getUserInfo() {
         return request({
             url: `${api_name}/auth/getUserInfo`,
             method: `get`
         })
     },
-
-    saveUserAuah(userAuah) {
+    // 用户认证
+    saveUserAuth(userAuah) {
         return request({
-            url: `${api_name}/auth/userAuah`,
+            url: `${api_name}/auth/userAuth`,
             method: 'post',
             data: userAuah
         })
