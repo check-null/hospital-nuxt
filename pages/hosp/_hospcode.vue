@@ -42,20 +42,20 @@
             <div>挂号规则</div>
             <div class="line">
               <div>
-                <span class="label">预约周期：</span
+                <span class="label">预约周期:</span
                 ><span>{{ bookingRule.cycle }}天</span>
               </div>
               <div class="space">
-                <span class="label">放号时间：</span
+                <span class="label">放号时间:</span
                 ><span>{{ bookingRule.releaseTime }}</span>
               </div>
               <div class="space">
-                <span class="label">停挂时间：</span
+                <span class="label">停挂时间:</span
                 ><span>{{ bookingRule.stopTime }}</span>
               </div>
             </div>
             <div class="line">
-              <span class="label">退号时间：</span>
+              <span class="label">退号时间:</span>
               <span v-if="bookingRule.quitDay == -1"
                 >就诊前一工作日{{ bookingRule.quitTime }}前取消</span
               >
@@ -82,7 +82,7 @@
                 >
                   <div class="el-scrollbar__view">
                     <div
-                      class="sub-item"
+                      class="sub-item move"
                       v-for="(item, index) in departmentVoList"
                       :key="item.id"
                       :class="index == activeIndex ? 'selected' : ''"
@@ -123,7 +123,7 @@
                 <div
                   v-for="it in item.children"
                   :key="it.id"
-                  class="sub-item"
+                  class="sub-item schedule"
                   @click="schedule(it.depcode)"
                 >
                   <span class="v-link clickable">{{ it.depname }} </span>
@@ -140,8 +140,8 @@
 </template>
 
 <script>
-//这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
-//例如：import《组件名称》from'《组件路径》';
+//这里可以导入其他文件（比如:组件，工具js，第三方插件js，json文件，图片文件等等）
+//例如:import《组件名称》from'《组件路径》';
 import "~/assets/css/hospital_personal.css";
 import "~/assets/css/hospital.css";
 import cookie from "js-cookie";
