@@ -391,15 +391,14 @@ export default {
     },
 
     show() {
-      window.location.href = "/hospital/" + this.hoscode;
+      window.location.href = "/hosp/" + this.hoscode;
     },
 
     booking(scheduleId, availableNumber) {
-      debugger;
       if (availableNumber == 0 || this.pageFirstStatus == -1) {
         this.$message.error("不能预约");
       } else {
-        window.location.href = "/hospital/booking?scheduleId=" + scheduleId;
+        window.location.href = "/hosp/booking?scheduleId=" + scheduleId;
       }
     },
   },
