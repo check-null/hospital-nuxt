@@ -6,7 +6,7 @@ export default {
     sendCode(mobile) {
         return request({
             url: `${api_name}/send/${mobile}`,
-            method: `get`
+            method: `post`
         })
     }
 }

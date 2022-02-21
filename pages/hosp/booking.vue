@@ -229,6 +229,7 @@ import "~/assets/css/hospital.css";
 
 import hospitalApi from "@/api/hosp";
 import patientApi from "@/api/patient";
+import orderApi from "@/api/orderInfo";
 
 export default {
   data() {
@@ -242,7 +243,7 @@ export default {
 
       activeIndex: 0,
       submitBnt: "确认挂号",
-      form: {}
+      form: {},
     };
   },
 
@@ -279,7 +280,12 @@ export default {
       this.patient = this.patientList[index];
     },
 
-    submitOrder() {},
+    submitOrder() {
+      orderApi.saveOrders(this.scheduleId, this.patient.id).then((data) => {
+        let orderId = data.data;
+        window.location.href = "/order/show?orderId=" + orderId;
+      });
+    },
 
     addPatient() {
       window.location.href = "/patient/add";
