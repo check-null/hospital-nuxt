@@ -15,5 +15,18 @@ export default {
       method: `get`
     })
   },
+  getPageList(page, limit, searchObj) {
+    return request({
+      url: `${api_name}/auth/${page}/${limit}`,
+      params: searchObj,
+      method: `get`
+    })
+  },
+  getStatusList() {
+    return request({
+      url: `${api_name}/auth/getStatusList`,
+      method: `get`
+    })
+  },
   
 }

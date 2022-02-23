@@ -114,15 +114,15 @@
         <div class="rule-wrapper mt40">
           <div class="rule-title">注意事项</div>
           <div>
-            1、请确认就诊人信息是否准确，若填写错误将无法取号就诊，损失由本人承担；<br />
+            1、请确认就诊人信息是否准确，若填写错误将无法取号就诊，损失由本人承担;<br />
             <span style="color: red"
               >2、【取号】就诊当天需在{{
                 orderInfo.fetchTime
-              }}在医院取号，未取号视为爽约，该号不退不换；</span
+              }}在医院取号，未取号视为爽约，该号不退不换;</span
             ><br />
             3、【退号】在{{ orderInfo.quitTime }}前可在线退号
-            ，逾期将不可办理退号退费；<br />
-            4、北京114预约挂号支持自费患者使用身份证预约，同时支持北京市医保患者使用北京社保卡在平台预约挂号。请于就诊当日，携带预约挂号所使用的有效身份证件到院取号；<br />
+            ，逾期将不可办理退号退费;<br />
+            4、北京114预约挂号支持自费患者使用身份证预约，同时支持北京市医保患者使用北京社保卡在平台预约挂号。请于就诊当日，携带预约挂号所使用的有效身份证件到院取号;<br />
             5、请注意北京市医保患者在住院期间不能使用社保卡在门诊取号。
           </div>
         </div>
@@ -146,7 +146,7 @@
       style="text-align: left"
       :append-to-body="true"
       width="500px"
-      @close="closeDialog"
+      @close="closeDialog()"
     >
       <div class="container">
         <div class="operate-view" style="height: 350px">
@@ -199,6 +199,7 @@ export default {
         this.orderInfo = response.data;
       });
     },
+    closeDialog() {}
   },
 };
 </script>
