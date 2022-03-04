@@ -65,12 +65,12 @@
           </div>
           <div class="info-form">
             <el-form ref="form" :model="form">
-              <el-form-item label="就诊人信息：">
+              <el-form-item label="就诊人信息:">
                 <div class="content">
                   <span>{{ orderInfo.patientName }}</span>
                 </div>
               </el-form-item>
-              <el-form-item label="就诊日期：">
+              <el-form-item label="就诊日期:">
                 <div class="content">
                   <span
                     >{{ orderInfo.reserveDate }}
@@ -78,32 +78,32 @@
                   >
                 </div>
               </el-form-item>
-              <el-form-item label="就诊医院：">
+              <el-form-item label="就诊医院:">
                 <div class="content">
                   <span>{{ orderInfo.hosname }} </span>
                 </div>
               </el-form-item>
-              <el-form-item label="就诊科室：">
+              <el-form-item label="就诊科室:">
                 <div class="content">
                   <span>{{ orderInfo.depname }} </span>
                 </div>
               </el-form-item>
-              <el-form-item label="医生职称：">
+              <el-form-item label="医生职称:">
                 <div class="content">
                   <span>{{ orderInfo.title }} </span>
                 </div>
               </el-form-item>
-              <el-form-item label="医事服务费：">
+              <el-form-item label="医事服务费:">
                 <div class="content">
                   <div class="fee">{{ orderInfo.amount }}元</div>
                 </div>
               </el-form-item>
-              <el-form-item label="挂号单号：">
+              <el-form-item label="挂号单号:">
                 <div class="content">
                   <span>{{ orderInfo.outTradeNo }} </span>
                 </div>
               </el-form-item>
-              <el-form-item label="挂号时间：">
+              <el-form-item label="挂号时间:">
                 <div class="content">
                   <span>{{ orderInfo.createTime }}</span>
                 </div>
@@ -169,6 +169,26 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog
+      :visible.sync="alipayShow"
+      style="text-align: left"
+      :append-to-body="true"
+      width="800px"
+      @close="closeDialog()"
+    >
+      <iframe
+        :srcdoc="srcdoc"
+        name="alipay-qrcode"
+        width="200"
+        height="205"
+        marginheight="50px"
+        frameborder="0"
+      ></iframe>
+      <div style="text-align: center; line-height: 25px; margin-bottom: 40px">
+        请使用支付宝扫一扫<br />
+        扫描二维码支付
+      </div>
+    </el-dialog>
   </div>
   <!-- footer -->
 </template>
@@ -176,6 +196,8 @@
 import "~/assets/css/hospital_personal.css";
 import "~/assets/css/hospital.css";
 import orderInfoApi from "@/api/orderInfo";
+import alipayApi from "@/api/alipay";
+
 export default {
   data() {
     return {
@@ -186,6 +208,9 @@ export default {
       dialogPayVisible: false,
       payObj: {},
       timer: null, // 定时器名称
+      form: null,
+      alipayShow: false,
+      srcdoc: "",
     };
   },
   created() {
@@ -195,11 +220,22 @@ export default {
   methods: {
     init() {
       orderInfoApi.getOrders(this.orderId).then((response) => {
-        console.log(response.data);
         this.orderInfo = response.data;
       });
     },
-    closeDialog() {}
+    closeDialog() {},
+    pay() {
+      alipayApi.createNative(this.orderId).then((data) => {
+        if (data.data) {
+          this.alipayShow = true;
+          this.srcdoc = data.data;
+          console.log(alipay);
+          // alipay.innerHTML = data.data;
+
+          // alipay.children[0].submit();
+        }
+      });
+    },
   },
 };
 </script>
