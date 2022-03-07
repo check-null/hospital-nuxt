@@ -229,13 +229,12 @@ export default {
         if (data.data) {
           this.alipayShow = true;
           this.srcdoc = data.data;
-          console.log(alipay);
-          // alipay.innerHTML = data.data;
-
-          // alipay.children[0].submit();
         }
       });
     },
+    cancelOrder() {
+      
+    }
   },
 };
 </script>

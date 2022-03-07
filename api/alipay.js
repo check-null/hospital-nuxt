@@ -14,5 +14,10 @@ export default {
       method: 'get'
     })
   },
-
+  close(orderId) {
+    return request({
+      url: `/api/order/alipay/close/${orderId}`,
+      method: 'get'
+    })
+  }
 }
