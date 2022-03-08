@@ -233,8 +233,29 @@ export default {
       });
     },
     cancelOrder() {
-      
-    }
+      alipayApi
+        .close(this.orderId)
+        .then((data) => {
+          console.log(data);
+          const close = data.data;
+          if (close) {
+            this.$message({
+              showClose: true,
+              message: "取消成功",
+              type: "success",
+            });
+            setTimeout (() => {
+              window.location.href = "/order"
+            }, 2000)
+          } else {
+            this.$message({
+              showClose: true,
+              message: "取消失败,请稍后再试",
+              type: "error",
+            });
+          }
+        });
+    },
   },
 };
 </script>
