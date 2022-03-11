@@ -255,6 +255,7 @@ export default {
         )
         .then((response) => {
           this.bookingScheduleList = response.data.bookingScheduleList;
+          console.log(this.bookingScheduleList);
           this.total = response.data.total;
           this.baseMap = response.data.baseMap;
 
