@@ -233,8 +233,8 @@ export default {
       });
     },
     cancelOrder() {
-      alipayApi
-        .close(this.orderId)
+      orderInfoApi
+        .cancelOrder(this.orderId)
         .then((data) => {
           console.log(data);
           const close = data.data;
