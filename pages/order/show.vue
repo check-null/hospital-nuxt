@@ -44,6 +44,9 @@
               <span class="iconfont"></span>
               {{ orderInfo.param.orderStatusString }}
             </div>
+            <div class="status-wrapper" v-if="orderInfo.orderStatus === 0">
+              剩余支付时间: {{ countDown }}
+            </div>
           </div>
           <div class="right-wrapper">
             <img
@@ -211,11 +214,19 @@ export default {
       form: null,
       alipayShow: false,
       srcdoc: "",
+      countDown: "",
+      xxx: 0,
     };
   },
   created() {
     this.orderId = this.$route.query.orderId;
     this.init();
+  },
+  mounted() {
+    this.startTimer();
+  },
+  beforeDestroy() {
+    this.stopTimer();
   },
   methods: {
     init() {
@@ -233,28 +244,50 @@ export default {
       });
     },
     cancelOrder() {
-      orderInfoApi
-        .cancelOrder(this.orderId)
-        .then((data) => {
-          console.log(data);
-          const close = data.data;
-          if (close) {
-            this.$message({
-              showClose: true,
-              message: "取消成功",
-              type: "success",
-            });
-            setTimeout (() => {
-              window.location.href = "/order"
-            }, 2000)
+      orderInfoApi.cancelOrder(this.orderId).then((data) => {
+        console.log(data);
+        const close = data.data;
+        if (close) {
+          this.$message({
+            showClose: true,
+            message: "取消成功",
+            type: "success",
+          });
+          setTimeout(() => {
+            window.location.href = "/order";
+          }, 2000);
+        } else {
+          this.$message({
+            showClose: true,
+            message: "取消失败,请稍后再试",
+            type: "error",
+          });
+        }
+      });
+    },
+    startTimer() {
+      if (this.orderInfo) {
+        this.timer = setInterval(() => {
+          let createTime = this.orderInfo.createTime;
+          let startTime = new Date().getTime();
+          let endTime = new Date(createTime).getTime() + 1000 * 60 * 15;
+          let time = (endTime - startTime) / 1000;
+          if (time > 0) {
+            let min = Math.floor((time / 60) % 60);
+            min = min > 9 ? min : "0" + min;
+            let sec = Math.floor(time % 60);
+            sec = sec > 9 ? sec : "0" + sec;
+            this.countDown = min + ":" + sec;
           } else {
-            this.$message({
-              showClose: true,
-              message: "取消失败,请稍后再试",
-              type: "error",
-            });
+            clearInterval(this.timer);
           }
-        });
+        }, 1000);
+      }
+    },
+    stopTimer() {
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
     },
   },
 };
